@@ -1,0 +1,135 @@
+$colorprimary: #2d5be3;
+$primary: #34b7f1;
+.login-page-wrap {
+  background-image: url(../../../assets/images/background.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-clip: border-box;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+    margin-top: 30px;
+  .login-content {
+    padding-bottom: 50px;
+    padding-left: 48px;
+    position: relative;
+    z-index: 1;
+    font-weight: 700;
+    .tab-content {
+      border-radius: 0 15px 15px 15px;
+      padding: 50px 56px;
+      background-color: #fff;
+    }
+  }
+}
+
+.item-lable {
+  text-align: left;
+}
+.item-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+  position: relative;
+  padding-bottom: 20px;
+}
+.item-title::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 3px;
+  border-radius: 4px;
+  background-color: $colorprimary;
+  bottom: 0;
+  left: 0;
+}
+.item-title::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 3px;
+  border-radius: 4px;
+  background-color: $colorprimary;
+  left: 10px;
+  bottom: 0;
+}
+
+.item-content {
+  font-size: 16px;
+}
+
+.item-input {
+  position: relative;
+  margin-bottom: 10px;
+}
+.item-input input {
+  height: 50px;
+}
+.input-custom {
+  border: none;
+  width: 350px;
+  padding: 5px 10px;
+  border-radius: 0;
+  border-bottom: 1px solid #eaeaea;
+  outline: none;
+}
+
+.item-link {
+  display: flex;
+  align-items: start;
+  margin: 10px 0;
+  a {
+    font-size: 14px;
+    text-decoration: none;
+  }
+}
+
+.btn-primary {
+  margin: 20px 0;
+  width: 100%;
+}
+.nav {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  border-bottom: none;
+  .nav-item {
+    margin-bottom: 10px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    .nav-link {
+      align-items: center;
+      background-color: #eaeaea;
+      color: black;
+      border-radius: 0 5px 5px 0;
+      font-size: 16px;
+      border: none;
+      padding: 35px 12px;
+      svg {
+        display: inline-block;
+        transform: rotate(90deg);
+        margin-bottom: 6px;
+        font-size: 22px;
+        color: $primary;
+      }
+    }
+    .nav-link:hover{
+        background-color: $primary;
+        color: #eaeaea;
+    }
+  }
+}
+.nav li .nav-link.active {
+  background-color: $primary;
+  color: #eaeaea;
+}
+
+.nav li .nav-link.active svg{
+    color: #eaeaea;
+}
+

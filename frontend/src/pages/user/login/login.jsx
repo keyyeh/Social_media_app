@@ -4,9 +4,7 @@ import { FaUserFriends } from "react-icons/fa";
 import { MdOutlineFileDownload } from "react-icons/md";
 import LoginLayout from "../../../components/layouts/login/LoginLayout.jsx";
 import RegisterLayout from "../../../components/layouts/login/RegisterLayout.jsx";
-import { useState } from "react";
 function Login() {
-  const[button, setButton] = useState("");
   return (
     <div className="login-page-wrap">
       <div className="content">

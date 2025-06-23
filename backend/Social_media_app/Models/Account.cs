@@ -19,7 +19,7 @@ namespace SocialConnectAPI.Models
         [Required, MaxLength(255)]
         public string Role { get; set; }
 
-        public User User { get; set; }
+        public User? User { get; set; }
     }
 
 }

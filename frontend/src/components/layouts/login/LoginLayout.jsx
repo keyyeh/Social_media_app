@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../../../services/api";
+import Alert from "../../common/Alert";
 
 const { http } = api();
 
@@ -16,6 +17,20 @@ function LoginLayout() {
       [name]: value,
     }));
   };
+
+  const handleCloseAlert = () => {
+    setError("");
+  };
+
+  useEffect(() => {
+    let timer;
+    if (error) {
+      timer = setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -51,7 +66,7 @@ function LoginLayout() {
       <div className="item-lable">
         <h5 className="item-content">Cần đăng nhập để tiếp tục</h5>
       </div>
-      {error && <div className="error-message" style={{ color: "red" }}>{error}</div>} {/* Hiển thị lỗi */}
+      <Alert message={error} type="danger" onClose={handleCloseAlert} />
       <form onSubmit={handleLogin}>
         <div className="item-input">
           <input

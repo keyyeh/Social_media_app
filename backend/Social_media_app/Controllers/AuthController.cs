@@ -26,10 +26,10 @@ namespace Social_media_app.Controllers
             }
 
             var checkAccount = await _context.Accounts
-                .FirstOrDefaultAsync(a => (a.Email == acc.Email || a.Phone == acc.Email) && a.Password == acc.Password); // Sửa Phone và Password
+                .FirstOrDefaultAsync(a => (a.Email == acc.Email || a.Phone == acc.Email) && a.Password == acc.Password);
             if (checkAccount == null)
             {
-                return Unauthorized(new { message = "Thông tin đăng nhập hoặc mật khẩu không đúng" }); // Sửa message
+                return Unauthorized(new { message = "Thông tin đăng nhập hoặc mật khẩu không đúng" });
             }
 
             // Trả về dữ liệu an toàn (tránh lộ thông tin nhạy cảm)
@@ -44,6 +44,8 @@ namespace Social_media_app.Controllers
         [Route("registration")]
         public async Task<Account> Register([FromBody] Account acc)
         {
+            acc.Password = BCrypt.Net.BCrypt.HashPassword(acc.Password);
+
             _context.Accounts.Add(acc);
             await _context.SaveChangesAsync();
             return acc;

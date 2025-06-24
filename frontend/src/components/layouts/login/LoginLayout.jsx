@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
+import Alert from "../../common/Alert";
 
 const { http } = api();
 
@@ -18,6 +19,20 @@ function LoginLayout() {
       [name]: value,
     }));
   };
+
+  const handleCloseAlert = () => {
+    setError("");
+  };
+
+  useEffect(() => {
+    let timer;
+    if (error) {
+      timer = setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

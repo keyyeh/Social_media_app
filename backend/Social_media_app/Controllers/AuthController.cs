@@ -73,6 +73,8 @@ namespace Social_media_app.Controllers
         [Route("registration")]
         public async Task<Account> Register([FromBody] Account acc)
         {
+            acc.Password = BCrypt.Net.BCrypt.HashPassword(acc.Password);
+
             _context.Accounts.Add(acc);
             await _context.SaveChangesAsync();
             return acc;

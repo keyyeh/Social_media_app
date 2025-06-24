@@ -24,10 +24,6 @@ builder.Services.AddCors(options =>
 // Connect DB
 builder.Services.AddDbContext<AppDbContext>(ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Cấu hình Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
 
 // Cấu hình JWT
 builder.Services.AddAuthentication(options =>

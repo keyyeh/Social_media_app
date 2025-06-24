@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SocialConnectAPI.Data;
 using SocialConnectAPI.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Social_media_app.Controllers
 {
@@ -11,10 +15,12 @@ namespace Social_media_app.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private IConfiguration _configuration;
 
-        public AuthController(AppDbContext context)
+        public AuthController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         [HttpPost]
         [Route("login")]
@@ -26,20 +32,43 @@ namespace Social_media_app.Controllers
             }
 
             var checkAccount = await _context.Accounts
-                .FirstOrDefaultAsync(a => (a.Email == acc.Email || a.Phone == acc.Email) && a.Password == acc.Password); // Sửa Phone và Password
+                .FirstOrDefaultAsync(a => a.Email == acc.Email && a.Password == acc.Password); // Sửa Phone và Password
             if (checkAccount == null)
             {
                 return Unauthorized(new { message = "Thông tin đăng nhập hoặc mật khẩu không đúng" }); // Sửa message
             }
 
+            var token = GenerateJwtToken(acc.Email);
+
             // Trả về dữ liệu an toàn (tránh lộ thông tin nhạy cảm)
             return Ok(new
             {
-                id = checkAccount.Id,
-                email = checkAccount.Email,
-                phone = checkAccount.Phone
+                token
             });
         }
+
+        private string GenerateJwtToken(string email)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, email),
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         [HttpPost]
         [Route("registration")]
         public async Task<Account> Register([FromBody] Account acc)

@@ -7,8 +7,8 @@ namespace SocialConnectAPI.Models
         [Key]
         public int Id { get; set; }
 
-        [Required, MaxLength(255)]
-        public string Phone { get; set; }
+        [MaxLength(255)]
+        public string? Phone { get; set; }
 
         [Required, MaxLength(255)]
         public string Email { get; set; }
@@ -16,8 +16,8 @@ namespace SocialConnectAPI.Models
         [Required, MaxLength(255)]
         public string Password { get; set; }
 
-        [Required, MaxLength(255)]
-        public string Role { get; set; }
+        [MaxLength(255)]
+        public string? Role { get; set; }
 
         public User? User { get; set; }
     }

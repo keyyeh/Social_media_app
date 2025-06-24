@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
 
 const { http } = api();
 
 function LoginLayout() {
+  const navi = useNavigate();
   const [fields, setFields] = useState({
     email: "",
     password: "",
@@ -33,9 +35,10 @@ function LoginLayout() {
     }
 
     try {
-      const response = await http.post("auth/login", fields); // Sửa resporse thành response
-      console.log(response.data);
-      alert("Đăng nhập thành công!");
+      const response = await http.post("Auth/login", fields); // Sửa resporse thành response
+
+      localStorage.setItem('token', response.data.token);
+      navi('/profile')
     } catch (err) {
       const message = err.response?.data?.message || "Đăng nhập thất bại";
       setError(message);

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
-import Alert from "../../common/Alert";
 
 const { http } = api();
 
@@ -11,17 +10,13 @@ function LoginLayout() {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(""); // Thêm trạng thái lỗi
+  const [error, setError] = useState("");
 
   const setFieldsValue = ({ target: { name, value } }) => {
     setFields((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
-
-  const handleCloseAlert = () => {
-    setError("");
   };
 
   useEffect(() => {
@@ -36,19 +31,7 @@ function LoginLayout() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Xóa lỗi cũ
-
-    // Xác thực cơ bản
-    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!isValidEmail(fields.email)) {
-      setError("Email không hợp lệ");
-      return;
-    }
-    if (!fields.password) {
-      setError("Mật khẩu không được để trống");
-      return;
-    }
-
+    setError(""); 
     try {
       const response = await http.post("Auth/login", fields); // Sửa resporse thành response
 
@@ -62,14 +45,13 @@ function LoginLayout() {
   };
 
   return (
-    <div className="tab-content">
+    <>
       <div className="item-lable">
         <h2 className="item-title">Đăng nhập</h2>
       </div>
       <div className="item-lable">
         <h5 className="item-content">Cần đăng nhập để tiếp tục</h5>
       </div>
-      {error && <div className="error-message" style={{ color: "red" }}>{error}</div>} {/* Hiển thị lỗi */}
       <form onSubmit={handleLogin}>
         <div className="item-input">
           <input
@@ -96,11 +78,12 @@ function LoginLayout() {
           />
         </div>
         <div className="item-link">
-          <a href="/forgot-password">Quên mật khẩu?</a> {/* Cập nhật href */}
+          <a href="/forgot-password">Quên mật khẩu?</a>
         </div>
         <button className="btn btn-primary">Đăng nhập</button>
       </form>
-    </div>
+    </>
+   
   );
 }
 

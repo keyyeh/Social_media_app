@@ -1,17 +1,17 @@
-import { Routes, Route, NavLink } from "react-router-dom";
 import "./login.scss";
 import { FaUserFriends } from "react-icons/fa";
 import { MdOutlineFileDownload } from "react-icons/md";
-import LoginLayout from "../../../components/layouts/login/LoginLayout.jsx";
-import RegisterLayout from "../../../components/layouts/login/RegisterLayout.jsx";
 import { useState, useEffect } from "react";
 import Alert from "../../../components/common/Alert.jsx";
+import LoginLayout from "../../../components/layouts/login/LoginLayout.jsx";
+import RegisterLayout from "../../../components/layouts/login/RegisterLayout.jsx";
 
 function Login() {
   const [message, setMessage] = useState("");
   const [button, setButton] = useState("");
+  const [isForm, setIsForm] = useState(true);
 
-  const handleMessageFromRegister = (newMessage, typeButon) => {
+    const handleMessageFromRegister = (newMessage, typeButon) => {
     setMessage(newMessage);
     setButton(typeButon);
   };
@@ -26,10 +26,26 @@ function Login() {
     if (message) {
       timer = setTimeout(() => {
         handleCloseAlert();
-      }, 3000); // 3000ms = 3 giây
+      }, 3000);
     }
     return () => clearTimeout(timer);
   }, [message]);
+
+  const [error, setError] = useState("");
+  useEffect(() => {
+    let timer;
+    if (error) {
+      timer = setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
+
+  //Hàm set trạng thái gọi form đăng nhập khi bằng true gọi form đăng ký bằng flase
+  const handleForm = (bool) => {
+    setIsForm(bool);
+  }
 
   return (
     <div className="login-page-wrap">
@@ -38,27 +54,21 @@ function Login() {
           <Alert message={message} type={button} onClose={handleCloseAlert} />
           <ul className="nav flex-column">
             <li className="nav-item">
-              <NavLink className="nav-link" to="/">
+              <button onClick={() => handleForm(true)} className="nav-link">
                 <FaUserFriends />
                 Đăng nhập
-              </NavLink>
+              </button>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/register">
+              <button onClick={() =>handleForm(false)} className="nav-link">
                 <MdOutlineFileDownload />
                 Đăng ký
-              </NavLink>
+              </button>  
             </li>
           </ul>
-          <Routes>
-            <Route path="/" element={<LoginLayout />} />
-            <Route
-              path="/register"
-              element={
-                <RegisterLayout onMessageChange={handleMessageFromRegister} />
-              }
-            />
-          </Routes>
+           <div className="tab-content">
+            {isForm ? (<LoginLayout/>):(<RegisterLayout onMessageChange={handleMessageFromRegister}/>)}
+           </div>
         </div>
       </div>
     </div>

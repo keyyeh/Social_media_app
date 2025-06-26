@@ -28,8 +28,8 @@ function RegisterLayout({onMessageChange}) {
     }
   };
   return (
-    <div className="tab-content">
-      <div className="item-lable">
+    <>
+       <div className="item-lable">
         <h2 className="item-title">Đăng ký</h2>
       </div>
       <div className="item-lable">
@@ -71,7 +71,8 @@ function RegisterLayout({onMessageChange}) {
         </div>
         <button className="btn btn-primary">Đăng ký</button>
       </form>
-    </div>
+    </>
+   
   );
 }
 

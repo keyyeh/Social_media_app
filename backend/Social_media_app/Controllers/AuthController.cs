@@ -31,9 +31,8 @@ namespace Social_media_app.Controllers
                 return BadRequest(new { message = "Email hoặc số điện thoại và mật khẩu không được để trống" });
             }
 
-            var checkAccount = await _context.Accounts
-                .FirstOrDefaultAsync(a => a.Email == acc.Email && a.Password == acc.Password); // Sửa Phone và Password
-            if (checkAccount == null)
+            var checkAccount = await AuthenticateUser(acc.Email, acc.Password);
+            if (!checkAccount)
             {
                 return Unauthorized(new { message = "Thông tin đăng nhập hoặc mật khẩu không đúng" }); // Sửa message
             }
@@ -46,7 +45,14 @@ namespace Social_media_app.Controllers
                 token
             });
         }
+        private async Task<bool> AuthenticateUser(string email, string password)
+        {
+            var user = await _context.Accounts.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null) return false;
 
+            // Xác minh mật khẩu
+            return BCrypt.Net.BCrypt.Verify(password, user.Password);
+        }
         private string GenerateJwtToken(string email)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

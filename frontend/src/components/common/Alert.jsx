@@ -16,7 +16,7 @@ const Alert = ({ message, type = 'danger', onClose }) => {
         top: '90%',
         left: '14%',
         transform: 'translateX(-50%)',
-        zIndex: 1000,
+        zIndex: 999999,
         minWidth: '300px',
         maxWidth: '500px',
       }}

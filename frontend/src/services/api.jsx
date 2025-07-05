@@ -1,34 +1,36 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "https://localhost:7012/api" || "http://localhost:7012/api",
+  baseURL: "http://localhost:5039/api", // Cổng đúng với backend bạn đang chạy
   headers: {
     "Content-Type": "application/json",
   },
 });
 
+// Gắn token nếu có
 http.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if(token){
+    const token = localStorage.getItem("token");
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    return config
+    return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Sử lý lỗi khi token hết hạn
+// Xử lý khi token hết hạn
 http.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      // Token hết hạn hoặc không hợp lệ
-      localStorage.removeItem('token');
-      window.location.href = '/'; // Chuyển hướng về trang đăng nhập
+      localStorage.removeItem("token");
+      window.location.href = "/";
     }
     return Promise.reject(error);
   }
 );
 
-export default () => ({ http });
+const createApi = () => ({ http });
+
+export default createApi;

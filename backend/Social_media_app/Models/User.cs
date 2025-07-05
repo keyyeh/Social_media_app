@@ -6,6 +6,7 @@ namespace SocialConnectAPI.Models
     public class User
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)] 
         public int UserId { get; set; }
 
         [Required, MaxLength(255)]
@@ -27,7 +28,7 @@ namespace SocialConnectAPI.Models
 
         [MaxLength(255)]
         public string? Cover { get; set; }
-        public Account Account { get; set; }
+        public Account? Account { get; set; }
         public List<CommPost> CommPosts { get; set; }
         public List<PostEmoji> PostEmojis { get; set; }
         public List<PostComment> PostComments { get; set; }

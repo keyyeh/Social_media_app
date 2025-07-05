@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Social_media_app.DTO;
 using SocialConnectAPI.Data;
 using SocialConnectAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -34,7 +35,7 @@ namespace Social_media_app.Controllers
             var checkAccount = await AuthenticateUser(acc.Email, acc.Password);
             if (!checkAccount)
             {
-                return Unauthorized(new { message = "Thông tin đăng nhập hoặc mật khẩu không đúng" }); // Sửa message
+                return Unauthorized(new { message = "Thông tin đăng nhập hoặc mật khẩu không đúng" });
             }
 
             var token = GenerateJwtToken(acc.Email);
@@ -77,13 +78,56 @@ namespace Social_media_app.Controllers
 
         [HttpPost]
         [Route("registration")]
-        public async Task<Account> Register([FromBody] Account acc)
+        public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
-            acc.Password = BCrypt.Net.BCrypt.HashPassword(acc.Password);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            _context.Accounts.Add(acc);
-            await _context.SaveChangesAsync();
-            return acc;
+            // Kiểm tra email hoặc số điện thoại đã tồn tại
+            if (await _context.Accounts.AnyAsync(a => a.Email == model.Account.Email))
+            {
+                return BadRequest(new { message = "Email đã được sử dụng" });
+            }
+            if (!string.IsNullOrEmpty(model.Account.Phone) &&
+                await _context.Accounts.AnyAsync(a => a.Phone == model.Account.Phone))
+            {
+                return BadRequest(new { message = "Số điện thoại đã được sử dụng" });
+            }
+
+            try
+            {
+                // Tạo tài khoản
+                var account = new Account
+                {
+                    Email = model.Account.Email,
+                    Phone = model.Account.Phone,
+                    Password = BCrypt.Net.BCrypt.HashPassword(model.Account.Password),
+                    Role = model.Account.Role ?? "user"
+                };
+
+                _context.Accounts.Add(account);
+                await _context.SaveChangesAsync();
+
+
+                // Tạo user liên kết
+                var user = new User
+                {
+                    UserId = account.Id,
+                    Name = model.Name
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Đăng ký thành công", accountId = account.Id });
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi nếu cần
+                return StatusCode(500, new { message = "Lỗi server khi đăng ký" + ex.Message});
+            }
         }
     }
 }

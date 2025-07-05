@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
+import Cookies from "js-cookie";
 
 const { http } = api();
 
@@ -11,7 +12,6 @@ function LoginLayout() {
     password: "",
   });
   const [error, setError] = useState("");
-
   const setFieldsValue = ({ target: { name, value } }) => {
     setFields((prev) => ({
       ...prev,
@@ -31,12 +31,12 @@ function LoginLayout() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
     try {
-      const response = await http.post("Auth/login", fields); // Sửa resporse thành response
+      const response = await http.post("Auth/login", fields);
 
-      localStorage.setItem('token', response.data.token);
-      navi('/profile')
+      localStorage.setItem("token", response.data.token);
+      navi("/profile");
     } catch (err) {
       const message = err.response?.data?.message || "Đăng nhập thất bại";
       setError(message);
@@ -44,6 +44,13 @@ function LoginLayout() {
     }
   };
 
+  //Kiểm tra đã tồn tại token của người đăng nhập chưa nếu đã nhập rồi thì không cần đăng nhập nữa
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navi("/profile");
+    }
+  });
   return (
     <>
       <div className="item-lable">
@@ -83,7 +90,6 @@ function LoginLayout() {
         <button className="btn btn-primary">Đăng nhập</button>
       </form>
     </>
-   
   );
 }
 

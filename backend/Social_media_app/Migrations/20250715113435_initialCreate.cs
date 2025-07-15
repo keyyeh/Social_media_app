@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Social_media_app.Migrations
 {
     /// <inheritdoc />
-    public partial class initialFirst : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,10 +17,10 @@ namespace Social_media_app.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Phone = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    Role = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,21 +31,21 @@ namespace Social_media_app.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Avatar = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Job = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Education = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false)
+                    Avatar = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Job = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Education = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Cover = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.ID);
+                    table.PrimaryKey("PK_Users", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Users_Accounts_ID",
-                        column: x => x.ID,
+                        name: "FK_Users_Accounts_UserId",
+                        column: x => x.UserId,
                         principalTable: "Accounts",
                         principalColumn: "Id");
                 });
@@ -69,7 +69,7 @@ namespace Social_media_app.Migrations
                         name: "FK_CommPosts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "ID");
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -90,12 +90,12 @@ namespace Social_media_app.Migrations
                         name: "FK_Friendships_Users_FriendshipId",
                         column: x => x.FriendshipId,
                         principalTable: "Users",
-                        principalColumn: "ID");
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_Friendships_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "ID");
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -117,12 +117,12 @@ namespace Social_media_app.Migrations
                         name: "FK_Messages_Users_ReceiverId",
                         column: x => x.ReceiverId,
                         principalTable: "Users",
-                        principalColumn: "ID");
+                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_Messages_Users_SenderId",
                         column: x => x.SenderId,
                         principalTable: "Users",
-                        principalColumn: "ID");
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -144,7 +144,7 @@ namespace Social_media_app.Migrations
                         name: "FK_Sales_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "ID");
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -176,7 +176,7 @@ namespace Social_media_app.Migrations
                         name: "FK_PostComments_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "ID");
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -200,7 +200,7 @@ namespace Social_media_app.Migrations
                         name: "FK_PostEmojis_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "ID");
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -254,7 +254,8 @@ namespace Social_media_app.Migrations
                 name: "IX_Accounts_Phone",
                 table: "Accounts",
                 column: "Phone",
-                unique: true);
+                unique: true,
+                filter: "[Phone] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CommPosts_UserId",

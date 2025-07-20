@@ -88,7 +88,7 @@ function LoginLayout() {
           <a href="/forgot-password">Quên mật khẩu?</a>
         </div>
         <button className="btn btn-primary">Đăng nhập</button>
-      </form>
+      </form>   
     </>
   );
 }

@@ -6,27 +6,27 @@ namespace SocialConnectAPI.Models
     public class User
     {
         [Key]
-        public int ID { get; set; }
+        public int UserId { get; set; }
 
         [Required, MaxLength(255)]
         public string Name { get; set; }
 
         [MaxLength(255)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         public DateTime? Date { get; set; }
 
         [MaxLength(255)]
-        public string Avatar { get; set; }
+        public string? Avatar { get; set; }
 
         [MaxLength(255)]
-        public string Job { get; set; }
+        public string? Job { get; set; }
 
         [MaxLength(255)]
-        public string Education { get; set; }
+        public string? Education { get; set; }
 
-        public int AccountId { get; set; }
-
+        [MaxLength(255)]
+        public string? Cover { get; set; }
         public Account Account { get; set; }
         public List<CommPost> CommPosts { get; set; }
         public List<PostEmoji> PostEmojis { get; set; }

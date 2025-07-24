@@ -41,12 +41,10 @@ namespace Social_media_app.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Role")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -56,7 +54,8 @@ namespace Social_media_app.Migrations
                         .IsUnique();
 
                     b.HasIndex("Phone")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[Phone] IS NOT NULL");
 
                     b.ToTable("Accounts");
                 });
@@ -309,19 +308,18 @@ namespace Social_media_app.Migrations
 
             modelBuilder.Entity("SocialConnectAPI.Models.User", b =>
                 {
-                    b.Property<int>("ID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AccountId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Avatar")
-                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Cover")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -329,12 +327,10 @@ namespace Social_media_app.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Education")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Job")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -343,7 +339,7 @@ namespace Social_media_app.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.HasKey("ID");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
@@ -479,7 +475,7 @@ namespace Social_media_app.Migrations
                 {
                     b.HasOne("SocialConnectAPI.Models.Account", "Account")
                         .WithOne("User")
-                        .HasForeignKey("SocialConnectAPI.Models.User", "ID")
+                        .HasForeignKey("SocialConnectAPI.Models.User", "UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -488,8 +484,7 @@ namespace Social_media_app.Migrations
 
             modelBuilder.Entity("SocialConnectAPI.Models.Account", b =>
                 {
-                    b.Navigation("User")
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SocialConnectAPI.Models.CommPost", b =>

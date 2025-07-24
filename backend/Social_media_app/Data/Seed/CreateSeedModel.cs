@@ -18,7 +18,7 @@ namespace SocialConnectAPI.Data.SeedModel
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Account)
                 .WithOne(a => a.User)
-                .HasForeignKey<User>(u => u.ID)
+                .HasForeignKey<User>(u => u.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             // CommPosts
